@@ -229,6 +229,7 @@ impl<T> SharedTensor<T> {
         let copies = LinearMap::<DeviceType, MemoryType>::new();
         let copy = try!(Self::alloc_on_device(dev, desc));
         let tensor_desc: TensorDesc = desc.into();
+        debug!("Creating SharedTensor of size {:?}", tensor_desc);
         Ok(SharedTensor {
             desc: tensor_desc,
             latest_location: dev.clone(),
@@ -262,6 +263,7 @@ impl<T> SharedTensor<T> {
         self.copies.clear();
         self.latest_copy = try!(Self::alloc_on_device(self.latest_device(), desc));
         let new_desc: TensorDesc = desc.into();
+        debug!("Resizing SharedTensor from {:?} to {:?}", self.desc, new_desc);
         self.desc = new_desc;
         Ok(())
     }

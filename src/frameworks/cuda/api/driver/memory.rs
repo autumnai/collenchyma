@@ -13,11 +13,14 @@ impl API {
     /// aligned for any kind of variable. The memory is not cleared.
     /// Returns a memory id for the created buffer, which can now be writen to.
     pub fn mem_alloc(bytesize: size_t) -> Result<Memory, Error> {
-        Ok(Memory::from_c(try!(unsafe {API::ffi_mem_alloc(bytesize)})))
+        let id_c = try!(unsafe {API::ffi_mem_alloc(bytesize)});
+        debug!("allocated memory at {:?} of size {:?}", id_c, bytesize);
+        Ok(Memory::from_c(id_c))
     }
 
     /// Releases allocated memory from the Cuda device.
     pub fn mem_free(memory: CUdeviceptr) -> Result<(), Error> {
+        debug!("freeing memory at {:?}", memory);
         unsafe {API::ffi_mem_free(memory)}
     }
 
